@@ -1,12 +1,22 @@
+/**
+ * MagaInterpreter - A custom-built, lightweight interpreter for the Maga-Code language.
+ * Maga-Code is a Kannada-inspired programming language designed for playful learning.
+ */
 class MagaInterpreter {
   constructor() {
+    /** @type {Object<string, *>} Dictionary to store variables */
     this.variables = {};
+    /** @type {string[]} Accumulator for program output */
     this.output = [];
   }
 
+  /**
+   * Tokenizes the source code into an array of strings.
+   * @param {string} code - The Maga-Code source string.
+   * @returns {string[]} An array of tokens.
+   */
   tokenize(code) {
     const tokens = [];
-    // Added % and | and & for logical ops, and made sure all operators are caught
     const regex = /(".*?"|\d+|[a-zA-Z_]\w*|==|!=|<=|>=|=|[{}();+\-*/<>!|&%])/g;
     let match;
     while ((match = regex.exec(code)) !== null) {
@@ -15,8 +25,13 @@ class MagaInterpreter {
     return tokens;
   }
 
+  /**
+   * Skips a block of code enclosed in curly braces {}.
+   * @param {string[]} tokens - The array of tokens.
+   * @param {number} pos - The current position at '{'.
+   * @returns {number} The position after the closing '}'.
+   */
   skipBlock(tokens, pos) {
-    // pos should be at '{'
     let depth = 1;
     pos++;
     while (depth > 0 && pos < tokens.length) {
@@ -27,6 +42,12 @@ class MagaInterpreter {
     return pos;
   }
 
+  /**
+   * Interprets and executes the given Maga-Code.
+   * @param {string} code - The source code to execute.
+   * @returns {string} The collected output of the program.
+   * @throws {Error} If the program doesn't start with 'shuru maga'.
+   */
   interpret(code) {
     this.variables = {};
     this.output = [];
@@ -52,9 +73,16 @@ class MagaInterpreter {
     return this.output.join("\n");
   }
 
+  /**
+   * Executes a single statement or control structure.
+   * @param {string[]} tokens - The array of tokens.
+   * @param {number} pos - The current token position.
+   * @returns {number} The next token position after execution.
+   */
   executeStatement(tokens, pos) {
     const token = tokens[pos];
 
+    // PRINT: helu maga <expr>;
     if (token === "helu" && tokens[pos + 1] === "maga") {
       pos += 2;
       let exprTokens = [];
@@ -67,6 +95,7 @@ class MagaInterpreter {
       return pos + 1; // Skip ';'
     }
 
+    // ASSIGNMENT: <varName> = <expr>;
     if (tokens[pos + 1] === "=") {
       const varName = tokens[pos];
       pos += 2;
@@ -79,6 +108,7 @@ class MagaInterpreter {
       return pos + 1; // Skip ';'
     }
 
+    // IF STATEMENT: maga <cond> adre { ... } [illandre maga { ... }]
     if (token === "maga") {
       pos += 1;
       let conditionTokens = [];
@@ -96,24 +126,27 @@ class MagaInterpreter {
         }
         pos++; // Skip '}'
 
-        // Skip following 'illandre maga ... adre' and 'illandre' blocks
+        // Skip subsequent 'illandre' blocks if the 'if' condition was met
         while (pos < tokens.length) {
           if (tokens[pos] === "illandre" && tokens[pos + 1] === "maga") {
             pos += 2;
-            while (tokens[pos] !== "adre" && pos < tokens.length) pos++;
-            if (tokens[pos] === "adre") pos++;
-            pos = this.skipBlock(tokens, pos);
-          } else if (tokens[pos] === "illandre" && tokens[pos + 1] === "maga") {
-            // This case handles else without if (already handled above but being safe)
-            pos += 2;
-            while (tokens[pos] !== "{" && pos < tokens.length) pos++;
-            pos = this.skipBlock(tokens, pos);
+            let currentIsElseIf = false;
+            let checkPos = pos;
+            while (tokens[checkPos] !== "{" && checkPos < tokens.length) {
+              if (tokens[checkPos] === "adre") {
+                currentIsElseIf = true;
+                break;
+              }
+              checkPos++;
+            }
+            // Skip the block correctly
+            pos = this.skipBlock(tokens, checkPos);
           } else {
             break;
           }
         }
       } else {
-        // Skip the current true block
+        // Skip the 'if' true block
         pos = this.skipBlock(tokens, pos - 1);
 
         let handled = false;
@@ -131,14 +164,15 @@ class MagaInterpreter {
             }
 
             if (isElseIf) {
+              // ELSE IF case
               let innerCondTokens = [];
               while (tokens[pos] !== "adre" && pos < tokens.length) {
                 innerCondTokens.push(tokens[pos]);
                 pos++;
               }
               const innerCondition = !!this.evaluateExpression(innerCondTokens);
-              if (tokens[pos] === "adre") pos++; // skip adre
-              if (tokens[pos] === "{") pos++; // skip {
+              if (tokens[pos] === "adre") pos++;
+              if (tokens[pos] === "{") pos++;
 
               if (innerCondition && !handled) {
                 while (tokens[pos] !== "}" && pos < tokens.length) {
@@ -150,8 +184,8 @@ class MagaInterpreter {
                 pos = this.skipBlock(tokens, pos - 1);
               }
             } else {
-              // It's a simple else: illandre maga {
-              if (tokens[pos] === "{") pos++; // skip {
+              // SIMPLE ELSE case: illandre maga {
+              if (tokens[pos] === "{") pos++;
               if (!handled) {
                 while (tokens[pos] !== "}" && pos < tokens.length) {
                   pos = this.executeStatement(tokens, pos);
@@ -171,6 +205,7 @@ class MagaInterpreter {
       return pos;
     }
 
+    // WHILE LOOP: repeate madu maga <cond> { ... }
     if (
       token === "repeate" &&
       tokens[pos + 1] === "madu" &&
@@ -194,11 +229,16 @@ class MagaInterpreter {
       return bodyEnd + 1; // Return position after '}'
     }
 
-    // Default or unknown statement
+    // Default: unknown token or skip
     pos++;
     return pos;
   }
 
+  /**
+   * Evaluates an expression by resolving variables and using standard JS eval.
+   * @param {string[]} tokens - The tokens forming the expression.
+   * @returns {*} The evaluated result.
+   */
   evaluateExpression(tokens) {
     if (tokens.length === 0) return null;
 
@@ -212,15 +252,13 @@ class MagaInterpreter {
       .join(" ");
 
     try {
-      // Replace '==' with '===' and '!=' with '!=='
+      // Replace '==' with '===' and '!=' with '!==' for strict matching
       let sanitized = expression.replace(/==|!=/g, (match) =>
         match === "==" ? "===" : "!==",
       );
-      // Ensure strings are handled correctly if evaluation fails
       return eval(sanitized);
     } catch (e) {
-      // If it's a simple string that failed eval (due to spaces/unexpected chars), return it as is or handle it
-      // For now, if eval fails, we just return the joined string.
+      // Fallback for simple string handling
       return expression;
     }
   }

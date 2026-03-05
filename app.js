@@ -1,4 +1,9 @@
+/**
+ * Main application logic for the Maga-Code Playground.
+ * Handles UI interactions, editor updates, and interpreter execution.
+ */
 document.addEventListener("DOMContentLoaded", () => {
+  // DOM Elements
   const editor = document.getElementById("editor");
   const output = document.getElementById("output");
   const runBtn = document.getElementById("runBtn");
@@ -8,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const interpreter = new MagaInterpreter();
 
-  // Initial code
+  // Initial code template
   const initialCode = `shuru maga
     helu maga "Namaskara Maga!";
     
@@ -22,9 +27,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 mugisu maga`;
 
+  /**
+   * Initializes the editor with the default template.
+   */
   editor.value = initialCode;
   updateLineNumbers();
 
+  /**
+   * Updates the line number display based on the current editor content.
+   */
   function updateLineNumbers() {
     const lines = editor.value.split("\n").length;
     lineNumbers.innerHTML = Array.from({ length: lines }, (_, i) => i + 1).join(
@@ -32,13 +43,22 @@ mugisu maga`;
     );
   }
 
+  // Event Listeners
   editor.addEventListener("input", updateLineNumbers);
+
+  /**
+   * Syncs scrolling between the editor and line numbers.
+   */
   editor.addEventListener("scroll", () => {
     lineNumbers.scrollTop = editor.scrollTop;
   });
 
+  /**
+   * Executes the code currently in the editor.
+   */
   runBtn.addEventListener("click", () => {
     output.innerText = "Running...";
+    // Small delay to provide visual feedback for 'Running...'
     setTimeout(() => {
       try {
         const result = interpreter.interpret(editor.value);
@@ -50,10 +70,16 @@ mugisu maga`;
     }, 100);
   });
 
+  /**
+   * Clears the terminal output area.
+   */
   clearBtn.addEventListener("click", () => {
     output.innerText = "";
   });
 
+  /**
+   * Handles loading code examples from cards.
+   */
   exampleCards.forEach((card) => {
     card.addEventListener("click", () => {
       const code = card.getAttribute("data-code");
@@ -61,13 +87,15 @@ mugisu maga`;
       updateLineNumbers();
       output.innerText = "Loaded example. Click Run to execute.";
 
-      // Visual feedback
+      // Visual feedback on click
       card.style.transform = "scale(0.95)";
       setTimeout(() => (card.style.transform = ""), 100);
     });
   });
 
-  // Support tab key in textarea
+  /**
+   * Enhances the textarea with tab support for indentation.
+   */
   editor.addEventListener("keydown", (e) => {
     if (e.key === "Tab") {
       e.preventDefault();
