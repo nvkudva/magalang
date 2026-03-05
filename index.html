@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maga-Code Playground</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-bg"></div>
+    <div class="container">
+        <header>
+            <h1>Maga-Code <span>Playground</span></h1>
+            <p>The ultimate Kannada-inspired programming language. "Maga" is all you need.</p>
+        </header>
+
+        <div class="editor-section">
+            <div class="top-bar">
+                <div class="label">maga_program.maga</div>
+                <div class="controls">
+                    <button id="runBtn" class="primary-btn">Run Maga 🚀</button>
+                    <button id="clearBtn" class="secondary-btn">Clear Output</button>
+                </div>
+            </div>
+            <div class="main-layout">
+                <div class="editor-container">
+                    <textarea id="editor" spellcheck="false" placeholder="Write your Naga-Code here..."></textarea>
+                    <div class="line-numbers" id="lineNumbers"></div>
+                </div>
+                <div class="output-container">
+                    <div class="output-label">Output</div>
+                    <div id="output" class="output-area">Welcome to Maga-Code! Click "Run Maga" to execute.</div>
+                </div>
+            </div>
+        </div>
+
+        <section class="examples">
+            <h3>Try these examples:</h3>
+            <div class="example-grid">
+                <div class="example-card" data-code='shuru maga
+    a = 10;
+    b = 20;
+    helu maga "Result is: " + (a + b);
+mugisu maga'>
+                    <h4>Basic Math</h4>
+                    <p>Variables and printing.</p>
+                </div>
+                <div class="example-card" data-code='shuru maga
+    yassu = 18;
+    maga yassu >= 18 adre {
+        helu maga "Neenu vote hakabahudu maga!";
+    } illandre maga {
+        helu maga "Innu swalpa kaayi maga!";
+    }
+mugisu maga'>
+                    <h4>Voting Check</h4>
+                    <p>If-Else condition.</p>
+                </div>
+                <div class="example-card" data-code='shuru maga
+    i = 1;
+    repeate madu maga i <= 5 {
+        helu maga "Count: " + i;
+        i = i + 1;
+    }
+mugisu maga'>
+                    <h4>Count Loop</h4>
+                    <p>While loop execution.</p>
+                </div>
+                <div class="example-card" data-code='shuru maga
+    n = 1;
+    repeate madu maga n <= 10 {
+        maga (n % 2) == 0 adre {
+            helu maga n + " is Even";
+        } illandre maga {
+            helu maga n + " is Odd";
+        }
+        n = n + 1;
+    }
+mugisu maga'>
+                    <h4>Even Or Odd</h4>
+                    <p>Conditions inside loops.</p>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>Made for the Magas, by a Maga.</p>
+        </footer>
+    </div>
+
+    <script src="maga-interpreter.js?v=5"></script>
+    <script src="app.js?v=5"></script>
+</body>
+</html>
