@@ -79,6 +79,28 @@ header p {
     font-size: 1.1rem;
 }
 
+.github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    border-radius: 999px;
+    color: var(--primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.github-link:hover {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: var(--primary);
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+    transform: translateY(-1px);
+}
+
 .editor-section {
     background: var(--card-bg);
     backdrop-filter: blur(12px);
