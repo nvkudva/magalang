@@ -2,6 +2,8 @@
 
 MagaLang is a Kannada-inspired, lightweight programming language designed for playful learning and expression. Built for the Magas, by a Maga.
 
+**[▶ Try the Live Playground](https://nvkudva.github.io/magalang/)**
+
 ![MagaLang Preview](preview.png)
 
 ## ✨ Features
