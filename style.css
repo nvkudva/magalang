@@ -7,7 +7,7 @@
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
     --font-sans: 'Outfit', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-mono: 'Noto Sans Kannada', monospace;
 }
 
 * {
@@ -184,8 +184,9 @@ header p {
     background: rgba(0, 0, 0, 0.2);
     color: #475569;
     font-family: var(--font-mono);
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
     text-align: right;
     padding-right: 0.75rem;
     user-select: none;
@@ -202,10 +203,11 @@ header p {
     border: none;
     color: #e2e8f0;
     font-family: var(--font-mono);
-    font-size: 1rem;
+    font-size: 1.05rem;
     padding: 1rem;
     outline: none;
-    line-height: 1.6;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
     overflow: auto;
     white-space: pre;
     user-select: text;
@@ -391,10 +393,4 @@ footer {
     background: rgba(0, 0, 0, 0.1);
 }
 
-/* ── Kannada Font Mode ────────────────────────────────────────────── */
-.kannada-font {
-    font-family: 'Noto Sans Kannada', 'JetBrains Mono', monospace !important;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    letter-spacing: 0.01em;
-}
+/* ── Kannada Font Mode removed since it is now globally consistent ── */
