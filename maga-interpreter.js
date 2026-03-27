@@ -16,7 +16,7 @@ class MagaInterpreter {
    * @returns {string}
    */
   normalizeKannada(code) {
-    if (typeof KannadaTranslit === 'undefined') return code;
+    if (typeof KannadaTranslit === 'undefined' || !KannadaTranslit.KANNADA_KEYWORDS) return code;
     // Split on quoted strings so we only replace keywords OUTSIDE of string literals
     const parts = code.split(/(\"[\s\S]*?\")/);
     const normalized = parts.map((part, i) => {
@@ -39,6 +39,7 @@ class MagaInterpreter {
    */
   tokenize(code) {
     const tokens = [];
+    // Enhanced regex to handle Kannada Unicode range and standard operators
     const regex = /("[\s\S]*?"|\d+|[\u0C00-\u0C7Fa-zA-Z_][\u0C00-\u0C7Fa-zA-Z0-9_]*|==|!=|<=|>=|=|[{}();+\-*/\<\>!|&%])/g;
     let match;
     while ((match = regex.exec(code)) !== null) {
